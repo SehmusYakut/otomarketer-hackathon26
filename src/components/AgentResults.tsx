@@ -50,7 +50,7 @@ export default function AgentResults({ data }: AgentResultsProps) {
 
       <div className="flex-1 bg-zinc-900/30 border border-zinc-900 rounded-xl p-5 overflow-y-auto max-h-[500px]">
         {activeTab === "visual" && (
-          <div className="space-y-5">
+          <div className="space-y-5 transition-all duration-300 animate-fade-in">
             <div>
               <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Tespit Edilen Konu</h4>
               <p className="text-sm text-zinc-200 font-medium">{visual.konu || visual.subject || "Belirtilmedi"}</p>
@@ -77,7 +77,7 @@ export default function AgentResults({ data }: AgentResultsProps) {
         )}
 
         {activeTab === "seo" && (
-          <div className="space-y-5">
+          <div className="space-y-5 transition-all duration-300 animate-fade-in">
             <div className="relative group bg-zinc-900/40 p-4 rounded-lg border border-zinc-800/80">
               <h4 className="text-xs font-semibold text-[#D1FF1A] uppercase tracking-wider mb-1">AI-First Başlık Önerisi</h4>
               <p className="text-base text-zinc-100 font-bold pr-8">{seo.baslik || seo.ai_first_title}</p>
@@ -103,7 +103,7 @@ export default function AgentResults({ data }: AgentResultsProps) {
         )}
 
         {activeTab === "growth" && (
-          <div className="space-y-5">
+          <div className="space-y-5 transition-all duration-300 animate-fade-in">
             <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-800">
               <h4 className="text-xs font-semibold text-[#D1FF1A] uppercase tracking-wider mb-1">Değer Odaklı Fiyatlandırma Stratejisi</h4>
               <p className="text-xs text-zinc-300 leading-relaxed">{growth.perceived_value_pricing_tip}</p>
