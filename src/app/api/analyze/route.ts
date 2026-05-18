@@ -13,19 +13,36 @@ Do not wrap your output in markdown code blocks. The current year is 2026.
 
 export async function POST(req: NextRequest) {
   try {
-    const formData = await req.formData();
-    const imageFile = formData.get("image") as File;
-    const price = formData.get("price") as string;
-    
-    if (!imageFile) {
-      return NextResponse.json({ error: "Görsel yüklenmesi zorunludur." }, { status: 400 });
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "GEMINI_API_KEY bulunamadı." },
+        { status: 500 }
+      );
     }
 
-    // Görseli Gemini'ın anlayacağı base64 formatına çeviriyoruz
+    const formData = await req.formData();
+    const imageFile = formData.get("image");
+    const price = formData.get("price");
+
+    if (!(imageFile instanceof File)) {
+      return NextResponse.json(
+        { error: "Görsel yüklenmesi zorunludur." },
+        { status: 400 }
+      );
+    }
+
+    const fiyatBilgisi =
+      typeof price === "string" && price.trim().length > 0
+        ? price.trim()
+        : "belirtilmedi";
+
+    // Gorseli Gemini'nin anlayacagi base64 formatina ceviriyoruz
     const buffer = Buffer.from(await imageFile.arrayBuffer());
     const base64Image = buffer.toString("base64");
 
-    // Gemini 2.5 Flash API Çağrısı
+    const ai = new GoogleGenAI({ apiKey });
+
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
@@ -35,11 +52,11 @@ export async function POST(req: NextRequest) {
             {
               inlineData: {
                 data: base64Image,
-                mimeType: imageFile.type,
+                mimeType: imageFile.type || "image/png",
               },
             },
             {
-              text: `Analyze this product image. Base price configured by seller is ${price}. Generate full visual analysis, 2026 SEO meta-data, and cross-platform growth campaigns.`,
+              text: `Bu urun gorselini analiz et. Saticinin belirttigi taban fiyat: ${fiyatBilgisi}. Tam bir gorsel analiz, 2026 SEO metasi ve platformlar arasi kampanya onerileri uret.`,
             },
           ],
         },
@@ -49,17 +66,22 @@ export async function POST(req: NextRequest) {
         // Modelin kesinlikle JSON dönmesini zorunlu kılıyoruz (Teknik Puan & Doğruluk)
         responseMimeType: "application/json", 
         temperature: 0.2,
-      }
+      },
     });
 
     const responseText = response.text;
-    if (!responseText) throw new Error("Yapay zekadan boş çıktı döndü.");
+    if (!responseText) {
+      throw new Error("Yapay zekadan bos cikti dondu.");
+    }
 
     const parsedJson = JSON.parse(responseText);
     return NextResponse.json(parsedJson);
-
-  } catch (error: any) {
-    console.error("Hackathon API Error:", error);
-    return NextResponse.json({ error: error.message || "İç sunucu hatası" }, { status: 500 });
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Bilinmeyen hata";
+    console.error("API Hatasi:", error);
+    return NextResponse.json(
+      { error: message },
+      { status: 500 }
+    );
   }
 }
