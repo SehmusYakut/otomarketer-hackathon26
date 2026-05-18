@@ -113,7 +113,9 @@ export default function Dashboard() {
       
       setCurrentStep("Ajan 3: Büyüme ve Kampanya Senaryoları Kurgulanıyor...");
       if (res.ok) {
-        setData(result);
+        const payload = result?.data || result?.result || result;
+        console.log("Frontend Received Data:", payload);
+        setData(payload);
       } else {
         alert(result.error || "Bir hata oluştu.");
       }
@@ -237,7 +239,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {!loading && data && (
+          {!loading && data !== null && (
             <div className="flex-1 flex flex-col gap-6">
               {/* Buraya Prompt 4 ile oluşturacağın Tab yapıları ve ajan sonuç kartları render edilecek */}
               <div className="p-4 bg-zinc-900/40 border border-zinc-800 rounded-lg flex items-center gap-3">
