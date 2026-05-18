@@ -113,7 +113,7 @@ export default function Dashboard() {
       
       setCurrentStep("Ajan 3: Büyüme ve Kampanya Senaryoları Kurgulanıyor...");
       if (res.ok) {
-        const payload = result?.data || result?.result || result;
+        const payload = result?.data ? result.data : result;
         console.log("Frontend Received Data:", payload);
         setData(payload);
       } else {
