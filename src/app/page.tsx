@@ -1,5 +1,5 @@
 "use client";
-import AgentResults from "../components/AgentResults";
+import AgentResults from "@/components/AgentResults";
 
 import { useEffect, useState } from "react";
 import { OtoMarketerResponse } from "@/types/marketing";

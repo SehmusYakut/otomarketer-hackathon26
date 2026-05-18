@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Search, Megaphone, Copy, Check } from "lucide-react";
+import { Eye, Search, Megaphone, Copy, Check, Info } from "lucide-react";
 
 interface AgentResultsProps {
   data: any;
@@ -9,24 +9,11 @@ export default function AgentResults({ data }: AgentResultsProps) {
   const [activeTab, setActiveTab] = useState<"visual" | "seo" | "growth">("visual");
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  const visual =
-    data?.gorselAnalizi ||
-    data?.visual_analysis ||
-    data?.gorselAnaliz ||
-    data?.visualAnalysis ||
-    {};
-  const seo =
-    data?.seoMetasi2026 ||
-    data?.seo_strategy ||
-    data?.seo ||
-    data?.seoMetasi ||
-    {};
-  const growth =
-    data?.growth_campaign ||
-    data?.growthCampaign ||
-    data?.growth ||
-    data?.buyumeKampanya ||
-    {};
+  // Bind exact keys from the terminal payload
+  const visual = data?.gorsel_analizi || {};
+  const seo = data?.seo_metasi_2026 || {};
+  const growth = data?.platformlar_arasi_kampanya_onerileri || {};
+  const pricing = data?.taban_fiyat_onerisi || "";
 
   const handleCopy = (text: string, fieldId: string) => {
     navigator.clipboard.writeText(text);
@@ -35,12 +22,13 @@ export default function AgentResults({ data }: AgentResultsProps) {
   };
 
   return (
-    <div className="flex flex-col h-full justify-between gap-6">
+    <div className="flex flex-col h-full justify-between gap-6 animate-fade-in">
+      {/* Tab Selectors */}
       <div className="grid grid-cols-3 gap-2 p-1 bg-zinc-900 rounded-lg border border-zinc-800">
         <button
           onClick={() => setActiveTab("visual")}
           className={`flex items-center justify-center gap-2 text-xs md:text-sm font-medium py-2.5 rounded-md transition-all ${
-            activeTab === "visual" ? "bg-[#D1FF1A] text-black font-semibold" : "text-zinc-400 hover:text-zinc-200"
+            activeTab === "visual" ? "bg-[#D1FF1A] text-black font-semibold shadow-md" : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Eye className="w-4 h-4" /> Görsel Analist
@@ -48,7 +36,7 @@ export default function AgentResults({ data }: AgentResultsProps) {
         <button
           onClick={() => setActiveTab("seo")}
           className={`flex items-center justify-center gap-2 text-xs md:text-sm font-medium py-2.5 rounded-md transition-all ${
-            activeTab === "seo" ? "bg-[#D1FF1A] text-black font-semibold" : "text-zinc-400 hover:text-zinc-200"
+            activeTab === "seo" ? "bg-[#D1FF1A] text-black font-semibold shadow-md" : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Search className="w-4 h-4" /> 2026 SEO Uzmanı
@@ -56,64 +44,80 @@ export default function AgentResults({ data }: AgentResultsProps) {
         <button
           onClick={() => setActiveTab("growth")}
           className={`flex items-center justify-center gap-2 text-xs md:text-sm font-medium py-2.5 rounded-md transition-all ${
-            activeTab === "growth" ? "bg-[#D1FF1A] text-black font-semibold" : "text-zinc-400 hover:text-zinc-200"
+            activeTab === "growth" ? "bg-[#D1FF1A] text-black font-semibold shadow-md" : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
           <Megaphone className="w-4 h-4" /> Büyüme Müdürü
         </button>
       </div>
 
-      <div className="flex-1 bg-zinc-900/30 border border-zinc-900 rounded-xl p-5 overflow-y-auto max-h-[500px]">
+      {/* Main Panel Content */}
+      <div className="flex-1 bg-zinc-900/30 border border-zinc-900 rounded-xl p-5 overflow-y-auto max-h-[550px] space-y-6">
+        {/* TAB 1: VISUAL ANALYST */}
         {activeTab === "visual" && (
-          <div className="space-y-5 transition-all duration-300 animate-fade-in">
-            <div>
-              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Tespit Edilen Konu</h4>
-              <p className="text-sm text-zinc-200 font-medium">{visual.konu || visual.subject || "Belirtilmedi"}</p>
+          <div className="space-y-5">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-0.5">Ürün Tipi</h4>
+                <p className="text-sm text-zinc-200 font-medium">{visual.urun_tipi || "Belirtilmedi"}</p>
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-0.5">Stil / Estetik</h4>
+                <p className="text-sm text-[#D1FF1A] font-medium">{visual.stil || visual.estetik}</p>
+              </div>
             </div>
+
             <div>
-              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Ana Unsurlar</h4>
+              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1.5">Renk Paleti</h4>
+              <p className="text-sm text-zinc-300 font-mono">{visual.renkler}</p>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Öne Çıkan Özellikler</h4>
               <div className="flex flex-wrap gap-2">
-                {(visual.anaUnsurlar || visual.detected_features || visual.features || []).map((item: string, i: number) => (
-                  <span key={i} className="text-xs bg-zinc-900 border border-zinc-800 text-zinc-300 px-2.5 py-1 rounded-md font-mono">{item}</span>
+                {(visual.one_cikan_ozellikler || []).map((item: string, i: number) => (
+                  <span key={i} className="text-xs bg-zinc-900 border border-zinc-800 text-zinc-300 px-2.5 py-1 rounded-md">
+                    ✓ {item}
+                  </span>
                 ))}
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              <div className="bg-zinc-900/50 border border-zinc-800/60 p-4 rounded-lg">
-                <h5 className="text-xs font-bold text-[#D1FF1A] uppercase tracking-wider mb-1">Hedef Kitle</h5>
-                <p className="text-xs text-zinc-400 leading-relaxed">{visual.hedefKitle || visual.target_audience_demographics || visual.targetAudience}</p>
-              </div>
-              <div className="bg-zinc-900/50 border border-zinc-800/60 p-4 rounded-lg">
-                <h5 className="text-xs font-bold text-zinc-300 uppercase tracking-wider mb-1">Çıkarılan Ürün/Hizmet</h5>
-                <p className="text-xs text-zinc-400 leading-relaxed">{visual.cikarilanUrunHizmet || visual.material_and_quality || visual.materialQuality}</p>
-              </div>
+
+            <div className="bg-zinc-900/50 border border-zinc-800/60 p-4 rounded-lg">
+              <h5 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Hedef Kitle Demografisi</h5>
+              <ul className="list-disc pl-4 space-y-1 text-xs text-zinc-400">
+                {(visual.hedef_kitle || []).map((kitle: string, idx: number) => (
+                  <li key={idx}>{kitle}</li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
 
+        {/* TAB 2: SEO STRATEGIST */}
         {activeTab === "seo" && (
-          <div className="space-y-5 transition-all duration-300 animate-fade-in">
+          <div className="space-y-5">
             <div className="relative group bg-zinc-900/40 p-4 rounded-lg border border-zinc-800/80">
-              <h4 className="text-xs font-semibold text-[#D1FF1A] uppercase tracking-wider mb-1">AI-First Başlık Önerisi</h4>
-              <p className="text-base text-zinc-100 font-bold pr-8">{seo.baslik || seo.ai_first_title || seo.title}</p>
-              <button onClick={() => handleCopy(seo.baslik || seo.ai_first_title || seo.title || "", "seoTitle")} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
+              <h4 className="text-xs font-semibold text-[#D1FF1A] uppercase tracking-wider mb-1">2026 AI-First Başlık</h4>
+              <p className="text-sm md:text-base text-zinc-100 font-bold pr-8">{seo.baslik}</p>
+              <button onClick={() => handleCopy(seo.baslik, "seoTitle")} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
                 {copiedField === "seoTitle" ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
+
             <div>
-              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Genişletilmiş Ürün Hikayesi</h4>
-              <div
-                className="text-xs text-zinc-400 bg-zinc-950 p-4 rounded-lg border border-zinc-900 leading-relaxed max-h-[180px] overflow-y-auto"
-                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
-                dangerouslySetInnerHTML={{ __html: seo.aciklama || seo.product_description_html || seo.description_html || "" }}
-              />
+              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Ürün Açıklaması / Hikayesi</h4>
+              <p className="text-xs md:text-sm text-zinc-400 bg-zinc-950 p-4 rounded-lg border border-zinc-900 leading-relaxed">
+                {seo.aciklama}
+              </p>
             </div>
+
             <div>
-              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Long-Tail Anahtar Kelimeler</h4>
+              <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Semantik Anahtar Kelimeler (Kopyalamak için Tıkla)</h4>
               <div className="flex flex-wrap gap-1.5">
-                {(seo.anahtarKelimeler || seo.long_tail_keywords || seo.keywords || []).map((keyword: string, idx: number) => (
-                  <span key={idx} onClick={() => handleCopy(keyword, `kw-${idx}`)} className="text-xs bg-zinc-950 border border-zinc-800 text-zinc-400 px-2.5 py-1 rounded cursor-pointer flex items-center gap-1">
-                    {keyword} {copiedField === `kw-${idx}` ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3 opacity-50" />}
+                {(seo.anahtar_kelimeler || []).map((keyword: string, idx: number) => (
+                  <span key={idx} onClick={() => handleCopy(keyword, `kw-${idx}`)} className="text-xs bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 text-zinc-400 px-2.5 py-1 rounded cursor-pointer flex items-center gap-1 transition-colors">
+                    {keyword} {copiedField === `kw-${idx}` ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3 opacity-40" />}
                   </span>
                 ))}
               </div>
@@ -121,29 +125,62 @@ export default function AgentResults({ data }: AgentResultsProps) {
           </div>
         )}
 
+        {/* TAB 3: GROWTH MANAGER */}
         {activeTab === "growth" && (
-          <div className="space-y-5 transition-all duration-300 animate-fade-in">
-            <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-800">
-              <h4 className="text-xs font-semibold text-[#D1FF1A] uppercase tracking-wider mb-1">Değer Odaklı Fiyatlandırma Stratejisi</h4>
-              <p className="text-xs text-zinc-300 leading-relaxed">{growth.perceived_value_pricing_tip || growth.fiyatlamaStratejisi || growth.pricing_tip}</p>
-            </div>
-            <div className="bg-zinc-900/60 p-4 rounded-lg border border-zinc-800">
-              <h4 className="text-xs font-semibold text-zinc-300 uppercase tracking-wider mb-1">Otonom Kampanya Kurgusu</h4>
-              <p className="text-xs text-zinc-400 leading-relaxed">{growth.promotional_campaign_idea || growth.kampanyaFikri || growth.campaign_idea}</p>
-            </div>
+          <div className="space-y-5">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-zinc-950 p-4 rounded-lg border border-zinc-900">
-                <h5 className="text-xs font-bold text-zinc-400 mb-2">Instagram / FB Reklam Metni</h5>
-                <p className="text-xs text-zinc-500 whitespace-pre-wrap">{growth.ad_copy?.meta_instagram || growth.reklamMetni?.instagram}</p>
-              </div>
-              <div className="bg-zinc-950 p-4 rounded-lg border border-zinc-900">
-                <h5 className="text-xs font-bold text-zinc-400 mb-2">TikTok Hook & Script</h5>
-                <p className="text-xs text-zinc-500 whitespace-pre-wrap">{growth.ad_copy?.tiktok_hook_and_script || growth.reklamMetni?.tiktok}</p>
-              </div>
+              {/* Instagram */}
+              {growth.instagram && (
+                <div className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-800 space-y-2">
+                  <span className="text-[10px] bg-purple-500/10 text-purple-400 font-mono px-2 py-0.5 rounded">Instagram</span>
+                  <p className="text-xs text-zinc-300 font-medium">{growth.instagram.reklam_onerileri}</p>
+                  <div className="text-[11px] text-zinc-500 space-y-1">
+                    {growth.instagram.icerik_stratejisi?.slice(0, 2).map((s: string, i: number) => <p key={i}>• {s}</p>)}
+                  </div>
+                </div>
+              )}
+
+              {/* TikTok */}
+              {growth.tiktok && (
+                <div className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-800 space-y-2">
+                  <span className="text-[10px] bg-red-500/10 text-red-400 font-mono px-2 py-0.5 rounded">TikTok</span>
+                  <p className="text-xs text-zinc-300 font-medium">{growth.tiktok.reklam_onerileri}</p>
+                  <div className="text-[11px] text-zinc-500 space-y-1">
+                    {growth.tiktok.icerik_stratejisi?.slice(0, 2).map((s: string, i: number) => <p key={i}>• {s}</p>)}
+                  </div>
+                </div>
+              )}
+
+              {/* Google Ads */}
+              {growth.google_ads && (
+                <div className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-800 space-y-2">
+                  <span className="text-[10px] bg-blue-500/10 text-blue-400 font-mono px-2 py-0.5 rounded">Google Ads</span>
+                  <p className="text-xs text-zinc-500"><strong className="text-zinc-400">Yöntemler:</strong> {growth.google_ads.kampanya_tipleri?.join(", ")}</p>
+                </div>
+              )}
+
+              {/* E-Posta */}
+              {growth.e_posta_pazarlamasi && (
+                <div className="bg-zinc-900/40 p-4 rounded-lg border border-zinc-800 space-y-1">
+                  <span className="text-[10px] bg-green-500/10 text-green-400 font-mono px-2 py-0.5 rounded">E-Posta Otomasyonu</span>
+                  <p className="text-xs text-zinc-400">{growth.e_posta_pazarlamasi.otomasyon}</p>
+                </div>
+              )}
             </div>
           </div>
         )}
       </div>
+
+      {/* Pricing / Valuation Badge Footer */}
+      {pricing && (
+        <div className="p-3.5 bg-zinc-950 border border-zinc-900 rounded-lg flex items-start gap-2.5">
+          <Info className="w-4 h-4 text-[#D1FF1A] shrink-0 mt-0.5" />
+          <div className="text-xs">
+            <span className="text-zinc-400 font-semibold block mb-0.5">Yapay Zeka Değer Odaklı Taban Fiyat Önerisi:</span>
+            <span className="text-zinc-300 leading-relaxed">{pricing}</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
