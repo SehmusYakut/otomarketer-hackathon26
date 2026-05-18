@@ -4,17 +4,17 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const playfairDisplayHeading = Playfair_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-heading",
 });
 
 const notoSans = Noto_Sans({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
 });
 
 const notoSansMono = Noto_Sans_Mono({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-mono",
 });
 

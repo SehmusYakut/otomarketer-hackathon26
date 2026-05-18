@@ -87,7 +87,11 @@ export default function AgentResults({ data }: AgentResultsProps) {
             </div>
             <div>
               <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Genişletilmiş Ürün Hikayesi</h4>
-              <div className="text-xs text-zinc-400 bg-zinc-950 p-4 rounded-lg border border-zinc-900 leading-relaxed max-h-[180px] overflow-y-auto" dangerouslySetInnerHTML={{ __html: seo.aciklama || seo.product_description_html }} />
+              <div
+                className="text-xs text-zinc-400 bg-zinc-950 p-4 rounded-lg border border-zinc-900 leading-relaxed max-h-[180px] overflow-y-auto"
+                style={{ fontFamily: "ui-sans-serif, system-ui, sans-serif" }}
+                dangerouslySetInnerHTML={{ __html: seo.aciklama || seo.product_description_html }}
+              />
             </div>
             <div>
               <h4 className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Long-Tail Anahtar Kelimeler</h4>

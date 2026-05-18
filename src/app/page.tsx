@@ -248,22 +248,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="mt-6 border-t border-zinc-900 pt-4 text-xs text-zinc-400">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.7)]" />
-                <span>Core Engine: Gemini-2.5-flash</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_rgba(56,189,248,0.7)]" />
-                <span>Pipeline: LangGraph Autonomous Orchestration</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full bg-lime-400 shadow-[0_0_10px_rgba(163,230,53,0.7)]" />
-                <span>Output: Structured JSON Verification</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </main>
