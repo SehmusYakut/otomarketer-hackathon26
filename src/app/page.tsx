@@ -1,4 +1,5 @@
 "use client";
+import AgentResults from "../components/AgentResults";
 
 import { useState } from "react";
 import { OtoMarketerResponse } from "@/types/marketing";
@@ -125,9 +126,7 @@ export default function Dashboard() {
                 <CheckCircle2 className="w-5 h-5 text-[#D1FF1A]" />
                 <p className="text-sm font-medium text-zinc-300">Ajanlar görevini tamamladı! Çıktılar hazır.</p>
               </div>
-              <pre className="text-xs bg-zinc-900 p-4 rounded overflow-auto max-h-[400px] text-zinc-400 border border-zinc-800">
-                {JSON.stringify(data, null, 2)}
-              </pre>
+              <AgentResults data={data} />
             </div>
           )}
         </div>
