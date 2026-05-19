@@ -16,6 +16,10 @@ export default function AgentResults({ data }: AgentResultsProps) {
   const seo = data.seo_meta_2026 || {};
   const campaign = data.cross_platform_campaign_suggestions || {};
 
+  const seoTitleTag = seo.title_tag || "Belirtilmedi";
+  const seoMetaDescription = seo.meta_description || "Belirtilmedi";
+  const campaignTheme = campaign.campaign_theme || "Belirtilmedi";
+
   const handleCopy = (text: string, fieldId: string) => {
     if (!text) return;
     navigator.clipboard.writeText(text);
@@ -76,7 +80,7 @@ export default function AgentResults({ data }: AgentResultsProps) {
 
             <div className="bg-zinc-950 p-3 rounded border border-zinc-900">
               <span className="text-[10px] text-zinc-500 uppercase block mb-1">Hedef Kitle</span>
-              <p className="text-xs text-zinc-400">{visual.target_audience}</p>
+              <p className="text-xs text-zinc-400">{visual.target_audience || "Belirtilmedi"}</p>
             </div>
           </div>
         )}
@@ -86,15 +90,15 @@ export default function AgentResults({ data }: AgentResultsProps) {
           <div className="space-y-4">
             <div className="relative bg-zinc-900/50 p-4 rounded-lg border border-zinc-800">
               <span className="text-[10px] text-[#D1FF1A] uppercase font-bold block mb-1">2026 AI-First Başlık</span>
-              <p className="text-sm font-bold text-white pr-8">{seo.title_tag}</p>
-              <button onClick={() => handleCopy(seo.title_tag, "title")} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
+              <p className="text-sm font-bold text-white pr-8">{seoTitleTag}</p>
+              <button onClick={() => handleCopy(seoTitleTag, "title")} className="absolute top-4 right-4 text-zinc-500 hover:text-white">
                 {copiedField === "title" ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
 
             <div className="bg-zinc-950 p-4 rounded border border-zinc-900">
               <span className="text-[10px] text-zinc-500 uppercase font-bold block mb-1">Meta Açıklama / Hikaye</span>
-              <p className="text-xs text-zinc-300 leading-relaxed">{seo.meta_description}</p>
+              <p className="text-xs text-zinc-300 leading-relaxed">{seoMetaDescription}</p>
             </div>
 
             <div>
@@ -114,13 +118,13 @@ export default function AgentResults({ data }: AgentResultsProps) {
         {activeTab === "growth" && (
           <div className="space-y-4">
             <div className="bg-[#D1FF1A]/10 p-3 rounded-lg border border-[#D1FF1A]/20">
-              <p className="text-sm text-[#D1FF1A] font-bold text-center">Kampanya: {campaign.campaign_theme}</p>
+              <p className="text-sm text-[#D1FF1A] font-bold text-center">Kampanya: {campaignTheme}</p>
             </div>
             
             <div className="grid grid-cols-1 gap-3">
               {(campaign.platforms || []).map((platform: any, i: number) => (
                 <div key={i} className="bg-zinc-950 p-4 rounded border border-zinc-900 space-y-2">
-                  <span className="text-xs font-bold text-white bg-zinc-800 px-2 py-1 rounded inline-block">{platform.name}</span>
+                  <span className="text-xs font-bold text-white bg-zinc-800 px-2 py-1 rounded inline-block">{platform.name || "Belirtilmedi"}</span>
                   <ul className="space-y-1.5">
                     {(platform.strategy || []).slice(0, 3).map((strat: string, idx: number) => (
                       <li key={idx} className="text-xs text-zinc-400 flex items-start gap-1.5">
