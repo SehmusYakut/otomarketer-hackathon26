@@ -109,7 +109,17 @@ export default function Dashboard() {
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       
       setCurrentStep("Ajan 2: 2026 SEO ve Semantik İçerikler Üretiliyor...");
-      const result = await res.json();
+      
+      let result;
+      if (res.status === 503) {
+        result = { error: "Google AI sunucuları şu an yoğun talep altında. Lütfen 10 saniye sonra tekrar deneyin." };
+      } else {
+        try {
+          result = await res.json();
+        } catch (e) {
+          result = { error: "Sunucudan geçersiz bir yanıt alındı." };
+        }
+      }
       
       setCurrentStep("Ajan 3: Büyüme ve Kampanya Senaryoları Kurgulanıyor...");
       if (res.ok) {

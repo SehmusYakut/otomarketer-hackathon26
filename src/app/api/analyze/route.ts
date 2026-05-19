@@ -105,9 +105,17 @@ export async function POST(req: NextRequest) {
 
     const parsedJson = JSON.parse(responseText);
     return NextResponse.json(parsedJson);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Bilinmeyen hata";
+  } catch (error: any) {
+    const message = error?.message || "Bilinmeyen hata";
     console.error("API Hatasi:", error);
+    
+    if (message.includes("503") || error?.status === 503) {
+      return NextResponse.json(
+        { error: "Google AI sunucuları şu an yoğun talep altında. Lütfen 10 saniye sonra tekrar deneyin." },
+        { status: 503 }
+      );
+    }
+
     return NextResponse.json(
       { error: message },
       { status: 500 }
